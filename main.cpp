@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// Function to calculate sum of all matrix elements with specified number of threads
 pair<double, double> calculateTotalSum(const vector<vector<int>>& matrix, int numThreads) {
     int rows = matrix.size();
     int cols = matrix[0].size();
@@ -28,7 +27,6 @@ pair<double, double> calculateTotalSum(const vector<vector<int>>& matrix, int nu
     return make_pair(totalSum, executionTime);
 }
 
-// Function to find row with minimum sum with specified number of threads
 tuple<int, double, double> findMinRowSum(const vector<vector<int>>& matrix, int numThreads) {
     int rows = matrix.size();
     int cols = matrix[0].size();
@@ -37,7 +35,6 @@ tuple<int, double, double> findMinRowSum(const vector<vector<int>>& matrix, int 
     
     double startTime = omp_get_wtime();
     
-    // Parallel calculation of sum for each row
     #pragma omp parallel for schedule(static) num_threads(numThreads)
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -45,7 +42,6 @@ tuple<int, double, double> findMinRowSum(const vector<vector<int>>& matrix, int 
         }
     }
     
-    // Sequential search for minimum
     int minRowIndex = 0;
     double minSum = rowSums[0];
     
@@ -62,7 +58,6 @@ tuple<int, double, double> findMinRowSum(const vector<vector<int>>& matrix, int 
     return make_tuple(minRowIndex, minSum, executionTime);
 }
 
-// Function to initialize matrix with random numbers
 void initializeMatrix(vector<vector<int>>& matrix, int rows, int cols) {
     random_device rd;
     mt19937 gen(rd());
@@ -76,7 +71,6 @@ void initializeMatrix(vector<vector<int>>& matrix, int rows, int cols) {
 }
 
 int main() {
-    // Matrix dimensions configuration
     const int ROWS = 8000;
     const int COLS = 8000;
     
@@ -84,7 +78,6 @@ int main() {
     cout << "Matrix size: " << ROWS << "x" << COLS << endl;
     cout << "Available threads: " << omp_get_max_threads() << endl << endl;
     
-    // Matrix initialization
     vector<vector<int>> matrix(ROWS, vector<int>(COLS));
     
     double startTime = omp_get_wtime();
@@ -94,16 +87,13 @@ int main() {
     cout << "Matrix initialization time: " << fixed << setprecision(6) 
          << initTime << " seconds" << endl << endl;
     
-    // User input for number of threads
     int numThreads;
     cout << "Enter number of threads: ";
     cin >> numThreads;
     cout << endl;
     
-    // Enable nested parallelism
     omp_set_nested(1);
     
-    // Variables to store results
     double totalSum = 0.0;
     double sumTime = 0.0;
     int minRowIndex = 0;
@@ -130,7 +120,6 @@ int main() {
         }
     }
     
-    // Вивід результатів після завершення паралельних обчислень
     cout << endl << "=== PERFORMANCE ===" << endl;
     cout << "sum " << numThreads << " threads worked - " << fixed << setprecision(6) 
          << sumTime << " seconds" << endl;
