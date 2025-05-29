@@ -42,13 +42,20 @@ tuple<int, double, double> findMinRowSum(const vector<vector<int>>& matrix, int 
         }
     }
     
+    
     int minRowIndex = 0;
     double minSum = rowSums[0];
-    
+
+    #pragma omp parallel for schedule(static)
     for (int i = 1; i < rows; i++) {
         if (rowSums[i] < minSum) {
-            minSum = rowSums[i];
-            minRowIndex = i;
+            #pragma omp critical
+            {
+                if (rowSums[i] < minSum) {
+                    minSum = rowSums[i];
+                    minRowIndex = i;
+                }
+            }
         }
     }
     
